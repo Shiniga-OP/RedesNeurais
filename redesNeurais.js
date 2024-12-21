@@ -188,8 +188,8 @@ class EDHv1 {
     treinar(dadosTreino, epocas = 100, taxaAprendizado = 0.01) {
         for (let epoca = 0; epoca < epocas; epoca++) {
             dadosTreino.forEach(data => {
-                const entradaNumerica = this.textoPraVetor(data.entrada, vocabulario);
-                const saidaNumerica = this.textoPraVetor(data.saida, vocabulario);
+                const entradaNumerica = this.textoPraVetor(data.entrada, this.vocabulario);
+                const saidaNumerica = this.textoPraVetor(data.saida, this.vocabulario);
                 
                 this.neuronios.forEach((neuronio, idx) => {
                     neuronio.treinar(entradaNumerica, saidaNumerica[idx], taxaAprendizado);
