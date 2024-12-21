@@ -200,9 +200,9 @@ class EDHv1 {
     
     // Gera texto a partir de uma entrada
     gerarTexto(entrada) {
-        const entradaNumerica = this.textoPraVetor(entrada, vocabulario);
+        const entradaNumerica = this.textoPraVetor(entrada, this.vocabulario);
         const saidaNumerica = this.neuronios.map(neuronio => neuronio.prever(entradaNumerica));
-        return this.vetorPraTexto(saidaNumerica, vocabulario);
+        return this.vetorPraTexto(saidaNumerica, this.vocabulario);
     }
     
     // Converte texto em vetor numérico
