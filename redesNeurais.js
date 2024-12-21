@@ -174,12 +174,14 @@ class NeuronioTexto {
 
 class EDHv1 {
     constructor() {
-      this.neuronios = 0;
+      this.neuronios = [];
+      this.vocabulario = [];
     }
     
     // cria o vocabulário
     criarVocabulario(vocabulario) {
       this.neuronios = vocabulario.map(() => new NeuronioTexto(vocabulario.length));
+      this.vocabulario = vocabulario;
     }
     
     // Treina os neurônios por várias épocas
@@ -238,4 +240,4 @@ rede.criarVocabulario(vocabulario);
 rede.treinar(dadosTreino);
 
 console.log(rede.gerarTexto("olá mundo"));
-console.log(rede.gerarTexto("tudo bem")); */
+console.log(rede.gerarTexto("tudo bem"));  */
