@@ -1,14 +1,90 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Converse com Alva</title>
+    <script src="treino.js"></script>
+    <script src="redesNeurais.js"></script>
 </head>
-
 <body>
+    <div class="container">
+        <div class="header">
+            <h1>ALVA</h1>
+            <p>A IA limitada</p>
+        </div>
+        <div class="chatbox">
+            <div class="mensagens" id="mensagens">
+            </div>
+            <div class="input-area">
+                <input type="text" id="inputUsuario" placeholder="Digite sua mensagem...">
+                <button id="enviarBtn"><span>Enviar</span></button>
+            </div>
+        </div>
+    </div>
+    <script>
+      const vocabS = vocabC.split(" ");
+      const inte = [];
+      const virg = [];
+      
+      for(let i=0;i<vocabS.length;i++) {
+        inte.push(vocabS[i]+"?");
+        virg.push(vocabS[i]+",");
+      }
+      
+      const vocab = [...vocabS, ...inte, ...virg];
+      
+      // inicializando a rede neural
+      const rede = new EDHv2_beta(vocab.length, 10, vocab.length); // 10 neurônios na camada oculta
+      
+      // convertendo os dados de treino
+      const dadosTreino = treino.map(({ entrada, saida }) => ({
+        entrada: rede.camadaOculta.textoPraVetor(entrada, vocab),
+        saida: rede.camadaOculta.textoPraVetor(saida, vocab);
+      }));
+      
+      // treinando a rede
+      rede.treinar(dadosTreino, 1000, 0.001);
+      
+      function gerarTexto(entrada) {
+        const entradaVetorizada = rede.camadaOculta.textoPraVetor(entrada, vocab);
+        const saidaVetorizada = rede.propagar(entradaVetorizada);
+        
+        // convertendo a saída para texto
+        const saidaTexto = rede.camadaSaida.vetorPraTexto(saidaVetorizada, vocab);
+        return saidaTexto;
+      }
+    </script>
+    <script>
+        const mensagens = document.getElementById('mensagens');
+        const inputUsuario = document.getElementById('inputUsuario');
+        const enviarBtn = document.getElementById('enviarBtn');
 
+        enviarBtn.addEventListener('click', () => {
+            const mensagem = inputUsuario.value;
+            if (mensagem.trim()) {
+                adicionarMensagem('Você', mensagem);
+                respostaAlva(mensagem);
+                inputUsuario.value = '';
+            }
+        });
+
+        function adicionarMensagem(remetente, texto) {
+            const novaMensagem = document.createElement('div');
+            novaMensagem.classList.add('mensagem');
+            const mensagemEntrada = texto.charAt(0).toLowerCase() + texto.slice(1);
+            novaMensagem.innerHTML = `<strong>${remetente}:</strong> ${mensagemEntrada}`;
+            mensagens.appendChild(novaMensagem);
+            mensagens.scrollTop = mensagens.scrollHeight;
+        }
+
+        function respostaAlva(mensagem) {
+            setTimeout(() => {
+              mensagem = mensagem.trim();
+              const mensagemEntrada = mensagem.charAt(0).toLowerCase() + mensagem.slice(1);
+                adicionarMensagem('Alva', gerarTexto(mensagemEntrada));
+            }, 1000);
+        }
+      </script>
 </body>
-
 </html>
